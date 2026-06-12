@@ -7,6 +7,7 @@
 ---
 
 ## Table of Contents
+
 1. [Prerequisites](#1-prerequisites)
 2. [Step 1: Set Up a Virtual Cloud Network (VCN)](#step-1-set-up-a-virtual-cloud-network-vcn)
 3. [Step 2: Create a VM Instance](#step-2-create-a-vm-instance)
@@ -18,7 +19,6 @@
 9. [Step 8: Verify Website Access](#step-8-verify-website-access)
 10. [Troubleshooting](#troubleshooting)
 11. [Best Practices](#best-practices)
-12. [Quick Reference](#quick-reference)
 
 ---
 
@@ -29,9 +29,11 @@
 | Requirement | Details |
 |---|---|
 | OCI Account | Already active (Always Free) |
-| SSH Client | Windows: PuTTY or Windows Terminal / Mac and Linux: built-in `ssh` command |
+| SSH Client | Windows: PuTTY or Windows PowerShell / Mac and Linux: built-in `ssh` command |
 | SSH Key Pair | Generated locally before starting (instructions below) |
 | Web Browser | Any modern browser |
+
+---
 
 ### Generate an SSH Key Pair
 
@@ -42,7 +44,9 @@ ssh-keygen -t rsa -b 4096 -C "oci-webserver-key"
 ```
 
 When prompted:
+
 - **File location:** Press Enter to accept the default path, or type a custom one such as `~/.ssh/oci_key`
+
 - **Passphrase:** Enter one for extra security, or press Enter twice to skip
 
 Two files will be created:
@@ -67,11 +71,13 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQ... oci-webserver-key
 
 A VCN is your private network inside OCI. Think of it as a virtual data center network you control. You need one with a public subnet before you can launch a VM that is reachable from the internet.
 
+
 ### 1.1 Navigate to Networking
 
-Log in to [cloud.oracle.com](https://cloud.oracle.com). In the top-left corner, click the hamburger menu (three horizontal lines). From the menu, select **Networking**, then **Virtual Cloud Networks**.
+Log in to [cloud.oracle.com](https://cloud.oracle.com). In the top left corner, click the hamburger menu (three horizontal lines). From the menu, select **Networking**, then **Virtual Cloud Networks**.
 
-Alternatively, from your main dashboard, look for the **Build** section and click **"Set up a network with a wizard"** to jump straight to the wizard.
+>Alternatively, from your main dashboard, look for the **Build** section and click **"Set up a network with a wizard"** to jump straight to the wizard.
+
 
 ### 1.2 Launch the VCN Wizard
 
