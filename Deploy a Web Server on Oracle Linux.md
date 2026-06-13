@@ -1,4 +1,4 @@
-# Deploy a Web Server on Oracle Linux
+# Deploy a Web Server on Oracle Cloud
 
 ---
 
