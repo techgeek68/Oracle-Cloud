@@ -1009,5 +1009,36 @@ ls -lh /home/opc/website_backup_*.tar.gz
 ```
 
 ---
+## Cleanup
+
+## OCI Cleanup
+
+### 1. Inside the VM
+
+```bash
+sudo systemctl stop httpd && sudo systemctl disable httpd
+sudo dnf remove httpd -y
+sudo dnf clean all
+exit
+```
+
+### 2. OCI Console (in this order)
+
+**Terminate the instance:**
+Compute > Instances > `webserver-vm` > More Actions > Terminate
+Check "Permanently delete the attached boot volume" > Confirm.
+
+**Delete the VCN:**
+Networking > Virtual Cloud Networks > `webserver-vcn` > More Actions > Delete > Confirm.
+
+> If the VCN delete fails, go inside the VCN, delete subnets individually, then retry.
+
+
+### 3. Local Machine
+
+```bash
+rm ~/.ssh/oci_key ~/.ssh/oci_key.pub
+ssh-keygen -R YOUR_PUBLIC_IP
+```
 
 ---
