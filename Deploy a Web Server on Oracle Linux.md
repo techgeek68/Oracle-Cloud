@@ -2,7 +2,7 @@
 
 ---
 
-**Tenancy:** anuppyakurel | **Region:** India South (Hyderabad) | 
+**Tenancy:** <orcle_cloud_username> | **Region:** India South (Hyderabad) | 
 
 ---
 
@@ -18,7 +18,7 @@
 8. [Step 7: Deploy Your HTML Website](#step-7-deploy-your-html-website)
 9. [Step 8: Verify Website Access](#step-8-verify-website-access)
 10. [Troubleshooting](#troubleshooting)
-11. [Best Practices](#best-practices)
+11. [Recommendations](#recommendations)
 
 ---
 
@@ -56,7 +56,7 @@ Two files will be created:
 Print the public key contents so you can copy them later:
 
 ```bash
-cat ~/.ssh/oci_key.pub
+cat ~/.ssh/<Key_Name>.pub
 ```
 
 The output will look something like this:
@@ -81,9 +81,9 @@ Log in to [cloud.oracle.com](https://cloud.oracle.com). In the top left corner, 
 
 ### 1.2 Launch the VCN Wizard
 
-On the Virtual Cloud Networks page, click **"Start VCN Wizard"**. When prompted to select a configuration, choose **"Create VCN with Internet Connectivity"** and click **"Start VCN Wizard"** to proceed.
+On the Virtual Cloud Networks page, click **Action** > **"Start VCN Wizard"**. When prompted to select a configuration, choose **"Create VCN with Internet Connectivity"** and click **"Start VCN Wizard"** to proceed.
 
-This option handles the bulk of the networking configuration for you and is recommended for beginners.
+>This option handles the bulk of the networking configuration for you and is recommended for beginners.
 
 ### 1.3 Fill In VCN Details
 
@@ -111,12 +111,15 @@ The wizard provisions the following resources automatically:
 Click **"View VCN"** once the wizard finishes.
 
 ---
+<img width="1470" height="712" alt="Screenshot 2026-06-13 at 7 33 08 PM" src="https://github.com/user-attachments/assets/d1de5881-be62-4ed0-a235-636414104298" />
+
+---
 
 ## Step 2: Create a VM Instance
 
 ### 2.1 Navigate to Compute Instances
 
-Click the hamburger menu (☰) in the top-left corner, go to **Compute**, then select **Instances**. Click **"Create instance"**.
+Click the hamburger menu (☰) in the top left corner, go to **Compute**, then select **Instances**. Click **"Create instance"**.
 
 ### 2.2 Configure the Instance
 
@@ -125,71 +128,77 @@ Click the hamburger menu (☰) in the top-left corner, go to **Compute**, then s
 | Field | Value |
 |---|---|
 | Name | `webserver-vm` |
-| Compartment | `anuppyakurel (root)` |
+| Compartment | `<orcle_cloud_username> (root)` |
 | Availability Domain | AD-1 (or whichever is available in Hyderabad) |
 
 **Image and Shape**
 
 Click **Edit** under "Image and shape".
 
-For the image, click **"Change image"**, select **Oracle Linux**, and pick **Oracle Linux 8** or **Oracle Linux 9** (choose the latest available). Click **"Select image"**.
+For the image, click **"Change image"**, select **CentOS 8 Stream**, and pick **Oracle Linux. Click **"Select image"**.
 
-For the shape, click **"Change shape"**, select **Ampere**, then choose **VM.Standard.A1.Flex**. This is an ARM-based shape and the best Always Free option available.
+> If you want to change the shape, click **"Change shape"**, select compatible shape and click **"Select shape"**.
 
-Set:
-- OCPUs: `1`
-- Memory: `6 GB`
+> **Always Free note:** for example The A1.Flex shape gives you a shared pool of 4 OCPUs and 24 GB RAM total, which you can distribute across up to 4 Ampere instances. The other Always Free x86 option is VM.Standard.E2.1.Micro, but it is limited to 1 OCPU and 1 GB RAM per instance, making A1.Flex the better choice for most workloads.
 
-Click **"Select shape"**.
-
-> **Always Free note:** The A1.Flex shape gives you a shared pool of 4 OCPUs and 24 GB RAM total, which you can distribute across up to 4 Ampere instances. The other Always Free x86 option is VM.Standard.E2.1.Micro, but it is limited to 1 OCPU and 1 GB RAM per instance, making A1.Flex the better choice for most workloads.
+Click on **Next**
 
 **Networking**
 
-Click **Edit** under "Networking".
-
 | Field | Value |
 |---|---|
-| Primary network | `webserver-vcn` |
-| Subnet | `public subnet-webserver-vcn` |
-| Public IPv4 address | Enable "Assign a public IPv4 address" |
+| Primary network | Select existing virtual cloud network `webserver-vcn` |
+| Subnet | Select existing subnet `public subnet-webserver-vcn` |
+| Public IPv4 address assignment| Enable "Assign a public IPv4 address" |
 
-Make sure the public subnet is selected. If you choose the private subnet by mistake, the instance will not get a public IP and will be unreachable from the internet.
+> Make sure the public subnet is selected. If you choose the private subnet by mistake, the instance will not get a public IP and will be unreachable from the internet.
 
 **Add SSH Keys**
 
 Under "Add SSH keys", select **"Paste public keys"** and paste the full contents of your `~/.ssh/oci_key.pub` file.
 
+Click on **Next**
+
 **Boot Volume**
 
-The default boot volume size is 50 GB. Leave this as-is. The Always Free tier includes 200 GB of total block storage shared across all your free instances, so 50 GB per instance is well within that limit.
+Specify a custom boot volume size and performance setting > Enable
 
-### 2.3 Launch the Instance
+The default boot volume size is 50 GB. Leave this as is. The Always Free tier includes 200 GB of total block storage shared across all your free instances, so 50 GB per instance is well within that limit.
+
+### 2.3 Review and Launch the Instance
 
 Click **Create** at the bottom of the page. The instance will pass through these states:
 
 ```
-PROVISIONING  →  STARTING  →  RUNNING
+PROVISIONING  >  STARTING  > RUNNING
 ```
 
-This typically takes 2 to 4 minutes. Do not proceed until the status badge shows green **RUNNING**.
+> This typically takes 2 to 4 minutes. Do not proceed until the status badge shows green **RUNNING**.
+
+---
+<img width="1467" height="743" alt="Screenshot 2026-06-13 at 8 00 43 PM" src="https://github.com/user-attachments/assets/9367d595-07db-4da3-b1dc-d05a688fba4f" />
+
+---
+<img width="1463" height="717" alt="Screenshot 2026-06-13 at 8 01 25 PM" src="https://github.com/user-attachments/assets/7e5fd860-1170-4caa-bb42-8e8e5ca774b4" />
+
+---
 
 ### 2.4 Record the Public IP Address
 
-Click on **`webserver-vm`** to open the instance details page. Scroll to the **"Instance information"** tab and look under **"Primary VNIC"**. Note the **Public IP address** (for example, `129.154.X.X`). You will use this in every subsequent step.
+Click on **`webserver-vm`** to open the instance details page. Select the **Networking** tab and look under **"Primary VNIC"**. Note the **Public IP address** (for example, `129.154.X.X`). You will use this in every subsequent step.
 
 ---
 
 ## Step 3: Configure Security Lists and Open Ports
 
-OCI Security Lists are firewall rules at the cloud network level. By default, only port 22 (SSH) is open. You need to add rules for HTTP (port 80) and HTTPS (port 443) before your web server is reachable from a browser.
+OCI Security Lists are firewall rules at the cloud network level. By default, only port 22 (SSH) is open. You need to add rules for HTTP (port 80) or HTTPS (port 443) before your web server is reachable from a browser.
 
 ### 3.1 Navigate to the Default Security List
 
 1. Click the hamburger menu (☰), go to **Networking**, then **Virtual Cloud Networks**.
 2. Click **`webserver-vcn`**.
 3. Click **Subnets**, then click **`public subnet-webserver-vcn`**.
-4. Click **Security Lists**, then click **`Default Security List for webserver-vcn`**.
+4. Click **Security Lists**, then click **`Default Security List for webserver-vcn`** and Select **Security rules**
 
 ### 3.2 Add Ingress Rules for HTTP and HTTPS
 
@@ -204,6 +213,8 @@ Click **"Add Ingress Rules"** and fill in the details below. You can add both ru
 | IP Protocol | TCP |
 | Destination Port Range | `80` |
 | Description | Allow HTTP traffic |
+
+or 
 
 **Rule 2: HTTPS (Port 443)**
 
@@ -227,7 +238,9 @@ Your security list should now contain at least these three ingress rules:
 | `0.0.0.0/0` | TCP | `80` | HTTP |
 | `0.0.0.0/0` | TCP | `443` | HTTPS |
 
-> **Security note:** Setting `0.0.0.0/0` as the SSH source allows connections from any IP on the internet. This is fine for learning, but in a production setup you should restrict the SSH rule's source CIDR to your own IP address (for example, `203.0.113.10/32`).
+> **Security note:** Setting `0.0.0.0/0` as the SSH source allows connections from any IP on the internet. This is fine for learning, but in a production setup, you should restrict the SSH rule's source CIDR to your own IP address (for example, `203.0.113.10/32`).
+---
+<img width="1468" height="718" alt="Screenshot 2026-06-13 at 8 10 24 PM" src="https://github.com/user-attachments/assets/be47a6c2-6c20-4916-b542-6709a7681c5c" />
 
 ---
 
@@ -257,9 +270,10 @@ ssh -i ~/.ssh/oci_key opc@YOUR_PUBLIC_IP
 
 The first time you connect, SSH will display a fingerprint verification prompt. Type `yes` and press Enter to continue. You should land at a prompt like this:
 
-```
-[opc@webserver-vm ~]$
-```
+---
+<img width="1151" height="263" alt="Screenshot 2026-06-13 at 8 13 26 PM" src="https://github.com/user-attachments/assets/738df1ce-4a42-4abe-939a-347777fde431" />
+
+---
 
 ### 4.3 Update the System
 
@@ -269,21 +283,50 @@ Always update packages before installing anything new:
 sudo dnf update -y
 ```
 
-This may take a few minutes depending on how many updates are pending.
+This may take a few minutes, depending on how many updates are pending.
 
 ### 4.4 Verify the OS Version
 
 Confirm you are running Oracle Linux as expected:
 
 ```bash
-cat /etc/oracle-release
+cat /etc/os-release
+```
+---
+> If the repository didn't work, follow the method below
+
+> CentOS Stream 8 hit End of Life on May 31, 2024. It receives no further security patches. Do not use this for anything production-facing. Recreating the instance with Oracle Linux 9 is the proper fix.
+
+Step 1: Back Up the Repo Files
+
+```bash
+sudo cp -r /etc/yum.repos.d /etc/yum.repos.d.backup
 ```
 
-Expected output:
-```
-Oracle Linux Server release 8.x
+Step 2: Redirect All Repos to the CentOS Vault Archive
+
+```bash
+sudo sed -i \
+  -e 's|^mirrorlist=|#mirrorlist=|g' \
+  -e 's|^#baseurl=|baseurl=|g' \
+  -e 's|mirror.centos.org/\$contentdir|vault.centos.org|g' \
+  -e 's|\$stream|CentOS-Stream8|g' \
+  /etc/yum.repos.d/*.repo
 ```
 
+Step 3: Clean Cache and Test
+
+```bash
+sudo dnf clean all
+sudo dnf makecache
+```
+
+If `makecache` completes without errors, run the update:
+
+```bash
+sudo dnf update -y
+```
+---
 ---
 
 ## Step 5: Install Apache Web Server
@@ -308,12 +351,6 @@ This single command both starts Apache immediately and configures it to start au
 sudo systemctl status httpd
 ```
 
-Look for the `Active:` line in the output. It should read:
-
-```
-Active: active (running) since ...
-```
-
 ### 5.4 Test Apache Locally on the VM
 
 ```bash
@@ -324,11 +361,20 @@ Expected response:
 
 ```
 HTTP/1.1 200 OK
-Server: Apache/2.4.xx (Oracle Linux)
-...
+Date: Sat, 13 Jun 2026 15:00:46 GMT
+Server: Apache/2.4.37 (CentOS Stream)
+Last-Modified: Sat, 13 Jun 2026 14:56:15 GMT
+ETag: "1980-65423cb7fd41a"
+Accept-Ranges: bytes
+Content-Length: 6528
+Content-Type: text/html; charset=UTF-8
 ```
 
-A `200 OK` here means Apache is working before you open it to the internet.
+---
+
+>A `200 OK` here means Apache is working before you open it to the internet.
+
+>A 403 Forbidden error confirms Apache is running and responding, but it cannot serve the requested content. The cause can be incorrect file or directory permissions, a wrong SELinux security context, or a missing index file with directory listing disabled. Check the Apache error log first to identify which one applies before making any changes.
 
 ---
 
@@ -355,13 +401,6 @@ sudo firewall-cmd --reload
 ```bash
 sudo firewall-cmd --list-all
 ```
-
-The output should include `http` and `https` in the services line:
-
-```
-services: cockpit dhcpv6-client http https ssh
-```
-
 ---
 
 ## Step 7: Deploy Your HTML Website
@@ -407,197 +446,329 @@ Paste the following HTML:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to My OCI Web Server</title>
+    <title>My OCI Web Server</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #0d1117;
+            color: #e6edf3;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
         }
-        .hero { text-align: center; padding: 60px 20px 40px; }
-        .oracle-badge {
+
+        header {
+            background-color: #161b22;
+            border-bottom: 1px solid #30363d;
+            padding: 18px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header .logo {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #e6edf3;
+            letter-spacing: 0.3px;
+        }
+
+        header .logo span {
+            color: #f05a2a;
+        }
+
+        header nav a {
+            color: #8b949e;
+            text-decoration: none;
+            font-size: 0.875rem;
+            margin-left: 24px;
+        }
+
+        header nav a:hover {
+            color: #e6edf3;
+        }
+
+        .hero {
+            max-width: 760px;
+            margin: 80px auto 60px;
+            padding: 0 24px;
+        }
+
+        .tag {
             display: inline-block;
-            background: linear-gradient(90deg, #c74634, #f80000);
-            color: white;
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 2px;
+            font-size: 0.75rem;
+            font-weight: 600;
             text-transform: uppercase;
-            padding: 8px 24px;
-            border-radius: 30px;
-            margin-bottom: 30px;
-        }
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
+            letter-spacing: 1px;
+            color: #f05a2a;
+            border: 1px solid #f05a2a;
+            border-radius: 4px;
+            padding: 3px 10px;
             margin-bottom: 20px;
-            background: linear-gradient(90deg, #ffffff, #a8d8ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
-        .subtitle {
-            font-size: 1.2rem;
-            color: #a0b9d9;
-            max-width: 600px;
-            margin: 0 auto 40px;
-            line-height: 1.7;
+
+        .hero h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            line-height: 1.3;
+            color: #e6edf3;
+            margin-bottom: 16px;
         }
-        .status-card {
-            background: rgba(255,255,255,0.07);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 16px;
-            padding: 24px 40px;
-            margin-bottom: 50px;
+
+        .hero p {
+            font-size: 1rem;
+            color: #8b949e;
+            line-height: 1.8;
+            max-width: 580px;
+        }
+
+        .status-bar {
+            max-width: 760px;
+            margin: 0 auto 60px;
+            padding: 0 24px;
+        }
+
+        .status-bar .inner {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 14px 20px;
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 10px;
+            font-size: 0.875rem;
+            color: #8b949e;
         }
-        .status-dot {
-            width: 14px;
-            height: 14px;
-            background: #00e676;
+
+        .status-bar .dot {
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            animation: pulse 2s infinite;
+            background-color: #3fb950;
             flex-shrink: 0;
         }
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(0,230,118,0.4); }
-            50% { box-shadow: 0 0 0 10px rgba(0,230,118,0); }
-        }
-        .status-text { font-size: 1rem; color: #d0e8ff; }
-        .status-text strong { color: #00e676; }
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-            max-width: 900px;
-            width: 100%;
-            padding: 0 20px;
-            margin-bottom: 50px;
-        }
-        .info-card {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 14px;
-            padding: 28px 24px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-        .info-card:hover { transform: translateY(-6px); }
-        .info-card .icon { font-size: 2.5rem; margin-bottom: 14px; }
-        .info-card h3 {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: #8ab4d4;
-            margin-bottom: 10px;
-        }
-        .info-card p { font-size: 1rem; font-weight: 600; color: #e0f0ff; }
-        .tech-stack {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 50px;
-        }
-        .tech-badge {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-size: 0.85rem;
+
+        .status-bar .inner b {
+            color: #3fb950;
             font-weight: 600;
-            color: #c9e0ff;
         }
+
+        .status-bar .inner .divider {
+            color: #30363d;
+            margin: 0 6px;
+        }
+
+        .section {
+            max-width: 760px;
+            margin: 0 auto 60px;
+            padding: 0 24px;
+        }
+
+        .section h2 {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #8b949e;
+            margin-bottom: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        table tr {
+            border-bottom: 1px solid #21262d;
+        }
+
+        table tr:last-child {
+            border-bottom: none;
+        }
+
+        table td {
+            padding: 12px 16px;
+            background-color: #161b22;
+        }
+
+        table td:first-child {
+            color: #8b949e;
+            width: 40%;
+            border-right: 1px solid #21262d;
+        }
+
+        table td:last-child {
+            color: #e6edf3;
+            font-weight: 500;
+        }
+
+        table tr:first-child td:first-child { border-radius: 6px 0 0 0; }
+        table tr:first-child td:last-child  { border-radius: 0 6px 0 0; }
+        table tr:last-child td:first-child  { border-radius: 0 0 0 6px; }
+        table tr:last-child td:last-child   { border-radius: 0 0 6px 0; }
+
+        .notice {
+            max-width: 760px;
+            margin: 0 auto 60px;
+            padding: 0 24px;
+        }
+
+        .notice .inner {
+            background-color: #1f1610;
+            border: 1px solid #6e3a1e;
+            border-radius: 6px;
+            padding: 14px 20px;
+            font-size: 0.875rem;
+            color: #c9742a;
+            line-height: 1.7;
+        }
+
+        .notice .inner b {
+            color: #e6825a;
+        }
+
+        .notice .inner a {
+            color: #e6825a;
+            text-decoration: underline;
+        }
+
+        .tags-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .badge {
+            font-size: 0.8rem;
+            color: #8b949e;
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            padding: 4px 12px;
+        }
+
         footer {
-            text-align: center;
-            padding: 30px 20px;
-            color: #506070;
-            font-size: 0.85rem;
+            border-top: 1px solid #21262d;
+            padding: 24px 40px;
+            font-size: 0.8rem;
+            color: #484f58;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        footer a { color: #6ea8d8; text-decoration: none; }
+
+        footer a {
+            color: #484f58;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #8b949e;
+        }
+
         @media (max-width: 600px) {
-            h1 { font-size: 2.2rem; }
-            .status-card { flex-direction: column; text-align: center; padding: 20px; }
+            header { padding: 16px 20px; }
+            header nav { display: none; }
+            .hero, .status-bar, .section, .notice { padding: 0 16px; }
+            .hero h1 { font-size: 1.8rem; }
+            .status-bar .inner { flex-direction: column; align-items: flex-start; gap: 6px; }
+            footer { flex-direction: column; gap: 8px; text-align: center; }
         }
     </style>
 </head>
 <body>
-    <section class="hero">
-        <div class="oracle-badge">Oracle Cloud Infrastructure</div>
+
+    <header>
+        <div class="logo">Oracle <span>Cloud</span> &mdash; webserver-vm</div>
+        <nav>
+            <a href="https://cloud.oracle.com" target="_blank">Console</a>
+            <a href="https://docs.oracle.com" target="_blank">Docs</a>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <div class="tag">Oracle Cloud Infrastructure</div>
         <h1>Welcome to My OCI Web Server</h1>
-        <p class="subtitle">
-            Your web server is live on Oracle Cloud Infrastructure,
-            running Oracle Linux with Apache HTTP Server.
-        </p>
-    </section>
+        <p>This instance is running on Oracle Cloud Infrastructure in the India South (Hyderabad) region. Apache HTTP Server is installed and serving this page over port 80.</p>
+    </div>
 
-    <div class="status-card">
-        <div class="status-dot"></div>
-        <div class="status-text">
-            Status: <strong>Online</strong> &nbsp;|&nbsp;
-            Region: <strong>India South (Hyderabad)</strong> &nbsp;|&nbsp;
-            Web Server: <strong>Apache HTTP Server</strong>
+    <div class="status-bar">
+        <div class="inner">
+            <div class="dot"></div>
+            <span>Server status: <b>Online</b></span>
+            <span class="divider">|</span>
+            <span>Region: ap-hyderabad-1</span>
+            <span class="divider">|</span>
+            <span>Web server: Apache/2.4.37</span>
         </div>
     </div>
 
-    <div class="info-grid">
-        <div class="info-card">
-            <div class="icon">🖥️</div>
-            <h3>Operating System</h3>
-            <p>Oracle Linux 8</p>
-        </div>
-        <div class="info-card">
-            <div class="icon">⚡</div>
-            <h3>Instance Shape</h3>
-            <p>VM.Standard.A1.Flex</p>
-        </div>
-        <div class="info-card">
-            <div class="icon">🌍</div>
-            <h3>Cloud Region</h3>
-            <p>ap-hyderabad-1</p>
-        </div>
-        <div class="info-card">
-            <div class="icon">🛡️</div>
-            <h3>Account Type</h3>
-            <p>Always Free Tier</p>
-        </div>
-        <div class="info-card">
-            <div class="icon">🌐</div>
-            <h3>Web Server</h3>
-            <p>Apache (httpd)</p>
-        </div>
-        <div class="info-card">
-            <div class="icon">🔒</div>
-            <h3>SSH Access</h3>
-            <p>Key-Based Auth</p>
+    <div class="notice">
+        <div class="inner">
+            <b>Note:</b> This server is currently running <b>CentOS Stream 8</b>, which reached
+            End of Life on May 31, 2024. It is recommended to migrate to
+            <a href="https://docs.oracle.com/en/operating-systems/oracle-linux/" target="_blank">Oracle Linux 9</a>
+            as soon as possible to continue receiving security updates.
         </div>
     </div>
 
-    <div class="tech-stack">
-        <span class="tech-badge">Oracle Linux</span>
-        <span class="tech-badge">Apache HTTP Server</span>
-        <span class="tech-badge">OCI Compute</span>
-        <span class="tech-badge">OCI VCN</span>
-        <span class="tech-badge">SSH Key Auth</span>
-        <span class="tech-badge">firewalld</span>
+    <div class="section">
+        <h2>Instance Details</h2>
+        <table>
+            <tr>
+                <td>Operating System</td>
+                <td>CentOS Stream 8 (EOL)</td>
+            </tr>
+            <tr>
+                <td>Instance Shape</td>
+                <td>VM.Standard.A1.Flex (1 OCPU, 6 GB RAM)</td>
+            </tr>
+            <tr>
+                <td>Cloud Region</td>
+                <td>India South &mdash; ap-hyderabad-1</td>
+            </tr>
+            <tr>
+                <td>Account Type</td>
+                <td>Always Free</td>
+            </tr>
+            <tr>
+                <td>Web Server</td>
+                <td>Apache/2.4.37 (httpd)</td>
+            </tr>
+            <tr>
+                <td>SSH Access</td>
+                <td>Key-based authentication (RSA 4096)</td>
+            </tr>
+            <tr>
+                <td>Tenancy</td>
+                <td>anuppyakurel</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Stack</h2>
+        <div class="tags-row">
+            <span class="badge">CentOS Stream 8</span>
+            <span class="badge">Apache/2.4.37</span>
+            <span class="badge">OCI Compute</span>
+            <span class="badge">OCI VCN</span>
+            <span class="badge">firewalld</span>
+            <span class="badge">SELinux</span>
+            <span class="badge">SSH Key Auth</span>
+        </div>
     </div>
 
     <footer>
-        <p>
-            Deployed on
-            <a href="https://cloud.oracle.com" target="_blank">Oracle Cloud Infrastructure</a>
-            &nbsp;|&nbsp; Tenancy: <strong>anuppyakurel</strong>
-        </p>
-        <p style="margin-top: 8px;">Deployed: June 2026</p>
+        <span>Deployed on <a href="https://cloud.oracle.com" target="_blank">Oracle Cloud Infrastructure</a></span>
+        <span>June 2026</span>
     </footer>
+
 </body>
 </html>
 ```
@@ -617,6 +788,10 @@ sudo find /var/www/html/ -type f -exec chmod 644 {} \;
 ```
 
 > **Note on ownership:** The `/var/www/html` directory is owned by `root` by default, and Apache runs as the `apache` user. For serving static HTML files, Apache only needs read access, which the 644/755 permissions above provide. Changing ownership to `apache` is only necessary if Apache needs to write to the directory (for example, for CMS uploads).
+
+```bash
+sudo chown -R apache:apache /var/www/html
+```
 
 Now restore the correct SELinux context on your web files. The default context for files under `/var/www/html` is `httpd_sys_content_t`, which allows Apache to read them. The `restorecon` command applies this automatically:
 
@@ -670,11 +845,10 @@ This applies changes gracefully without dropping active connections.
 curl -s http://localhost | grep -o "<title>.*</title>"
 ```
 
-Expected output:
+---
+<img width="1468" height="118" alt="Screenshot 2026-06-13 at 8 55 02 PM" src="https://github.com/user-attachments/assets/1d2edf1e-af07-4be8-83d3-2287a7ae3d09" />
 
-```html
-<title>Welcome to My OCI Web Server</title>
-```
+---
 
 ### 8.2 Open the Website in a Browser
 
@@ -686,7 +860,10 @@ http://YOUR_PUBLIC_IP
 
 For example: `http://129.154.X.X`
 
-You should see your welcome page with the gradient background, status indicator, and server detail cards.
+---
+<img width="1470" height="926" alt="Screenshot 2026-06-13 at 9 11 30 PM" src="https://github.com/user-attachments/assets/1f13bd19-a59a-4099-989d-2f590eef0f11" />
+
+---
 
 ### 8.3 Test from the Command Line on Your Local Machine
 
@@ -698,18 +875,13 @@ Expected output:
 
 ```
 HTTP/1.1 200 OK
-Date: ...
-Server: Apache/2.4.xx (Oracle Linux)
+Date: Sat, 13 Jun 2026 15:28:55 GMT
+Server: Apache/2.4.37 (CentOS Stream)
+Last-Modified: Sat, 13 Jun 2026 15:24:50 GMT
+ETag: "22a0-6542431bffbef"
+Accept-Ranges: bytes
+Content-Length: 8864
 Content-Type: text/html; charset=UTF-8
-```
-
-### 8.4 Look Up the Public IP from Inside the VM
-
-If you need to check the instance's public IP while logged in, query the OCI Instance Metadata Service (IMDS). This is a link-local endpoint (`169.254.169.254`) accessible only from within the instance, provided by Oracle's metadata service (IMDSv1):
-
-```bash
-curl -s http://169.254.169.254/opc/v1/vnics/ | \
-  python3 -c "import sys, json; data=json.load(sys.stdin); print(data[0].get('publicIp', 'Not assigned'))"
 ```
 
 ---
@@ -721,17 +893,16 @@ curl -s http://169.254.169.254/opc/v1/vnics/ | \
 Work through these checks in order:
 
 ```bash
-# Confirm Apache is running
-sudo systemctl status httpd
+sudo systemctl status httpd                            # Confirm Apache is running
 
-# Confirm port 80 is actively listening
-sudo ss -tlnp | grep :80
 
-# Confirm the OS firewall has HTTP open
-sudo firewall-cmd --list-services
+sudo ss -tlnp | grep :80                                # Confirm port 80 is actively listening
+
+
+sudo firewall-cmd --list-services                        # Confirm the OS firewall has HTTP open
 ```
 
-If the OS-level checks look fine, go back to the OCI Console and verify:
+If the OS level checks look fine, go back to the OCI Console and verify:
 - The Security List for your public subnet has an ingress rule allowing TCP port 80 from `0.0.0.0/0`
 - The instance is in the **public subnet**, not the private subnet
 - A public IPv4 address is assigned to the instance
@@ -791,7 +962,7 @@ sudo systemctl reload httpd
 
 ---
 
-## Best Practices
+## Recommendations
 
 ### Security
 
@@ -837,14 +1008,6 @@ sudo tar -czf /home/opc/website_backup_$(date +%Y%m%d).tar.gz /var/www/html/
 ls -lh /home/opc/website_backup_*.tar.gz
 ```
 
-### Apache Management Reference
-
-```bash
-sudo systemctl start httpd       # Start the service
-sudo systemctl stop httpd        # Stop the service
-sudo systemctl restart httpd     # Full restart (brief downtime)
-sudo systemctl reload httpd      # Graceful reload without downtime
-sudo apachectl configtest        # Check configuration syntax before reloading
-```
+---
 
 ---
