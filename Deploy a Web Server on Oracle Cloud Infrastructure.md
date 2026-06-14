@@ -293,39 +293,40 @@ Confirm you are running Oracle Linux as expected:
 cat /etc/os-release
 ```
 ---
-> If the repository didn't work, follow the method below
+>**If the repository didn't work, follow the method below**
 
 > CentOS Stream 8 hit End of Life on May 31, 2024. It receives no further security patches. Do not use this for anything production-facing. Recreating the instance with Oracle Linux 9 is the proper fix.
 
-Step 1: Back Up the Repo Files
+>Step 1: Back Up the Repo Files
 
-```bash
-sudo cp -r /etc/yum.repos.d /etc/yum.repos.d.backup
-```
+>```bash
+>sudo cp -r /etc/yum.repos.d /etc/yum.repos.d.backup
+>```
 
-Step 2: Redirect All Repos to the CentOS Vault Archive
+>Step 2: Redirect All Repos to the CentOS Vault Archive
 
-```bash
-sudo sed -i \
-  -e 's|^mirrorlist=|#mirrorlist=|g' \
-  -e 's|^#baseurl=|baseurl=|g' \
-  -e 's|mirror.centos.org/\$contentdir|vault.centos.org|g' \
-  -e 's|\$stream|CentOS-Stream8|g' \
-  /etc/yum.repos.d/*.repo
-```
+>```bash
+>sudo sed -i \
+>  -e 's|^mirrorlist=|#mirrorlist=|g' \
+>  -e 's|^#baseurl=|baseurl=|g' \
+>  -e 's|mirror.centos.org/\$contentdir|vault.centos.org|g' \
+>  -e 's|\$stream|CentOS-Stream8|g' \
+>  /etc/yum.repos.d/*.repo
+>```
 
-Step 3: Clean Cache and Test
+>Step 3: Clean Cache and Test
 
-```bash
-sudo dnf clean all
-sudo dnf makecache
-```
+>```bash
+>sudo dnf clean all
+>sudo dnf makecache
+>```
 
-If `makecache` completes without errors, run the update:
+>If `makecache` completes without errors, run the update:
 
-```bash
-sudo dnf update -y
-```
+>```bash
+>sudo dnf update -y
+>```
+
 ---
 ---
 
