@@ -1,4 +1,4 @@
-# Deploy a Web Server on Oracle Cloud Infrastructure
+# Deploy a Web Server on Oracle Cloud Infrastructure (OCI)
 
 ---
 
