@@ -742,7 +742,7 @@ Paste the following HTML:
             </tr>
             <tr>
                 <td>SSH Access</td>
-                <td>Key-based authentication (RSA 4096)</td>
+                <td>Key based authentication (RSA 4096)</td>
             </tr>
             <tr>
                 <td>Tenancy</td>
