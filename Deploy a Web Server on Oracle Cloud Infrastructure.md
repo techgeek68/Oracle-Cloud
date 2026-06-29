@@ -1,11 +1,9 @@
 # Deploy a Web Server on Oracle Cloud Infrastructure (OCI)
 
 ---
-
 **Tenancy:** <orcle_cloud_username> | **Region:** India South (Hyderabad) | 
 
 ---
-
 ## Table of Contents
 
 1. [Prerequisites](#1-prerequisites)
@@ -19,7 +17,6 @@
 9. [Step 8: Verify Website Access](#step-8-verify-website-access)
 10. [Troubleshooting](#troubleshooting)
 11. [Recommendations](#recommendations)
-
 ---
 
 ## 1. Prerequisites
@@ -34,7 +31,6 @@
 | Web Browser | Any modern browser |
 
 ---
-
 ### Generate an SSH Key Pair
 
 Run this command on your **local machine**, not inside OCI:
@@ -66,7 +62,6 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQ... oci-webserver-key
 ```
 
 ---
-
 ## Step 1: Set Up a Virtual Cloud Network (VCN)
 
 A VCN is your private network inside OCI. Think of it as a virtual data center network you control. You need one with a public subnet before you can launch a VM that is reachable from the internet.
@@ -114,7 +109,6 @@ Click **"View VCN"** once the wizard finishes.
 <img width="1470" height="712" alt="Screenshot 2026-06-13 at 7 33 08 PM" src="https://github.com/user-attachments/assets/d1de5881-be62-4ed0-a235-636414104298" />
 
 ---
-
 ## Step 2: Create a VM Instance
 
 ### 2.1 Navigate to Compute Instances
@@ -135,7 +129,7 @@ Click the hamburger menu (☰) in the top left corner, go to **Compute**, then s
 
 Click **Edit** under "Image and shape".
 
-For the image, click **"Change image"**, select **CentOS 8 Stream**, and pick **Oracle Linux. Click **"Select image"**.
+For the image, click **"Change image"**, select **CentOS 8 Stream**, and pick **CentOS 8 Stream**. Click **"Select image"**.
 
 > If you want to change the shape, click **"Change shape"**, select compatible shape and click **"Select shape"**.
 
@@ -182,13 +176,11 @@ PROVISIONING  >  STARTING  > RUNNING
 <img width="1463" height="717" alt="Screenshot 2026-06-13 at 8 01 25 PM" src="https://github.com/user-attachments/assets/7e5fd860-1170-4caa-bb42-8e8e5ca774b4" />
 
 ---
-
 ### 2.4 Record the Public IP Address
 
 Click on **`webserver-vm`** to open the instance details page. Select the **Networking** tab and look under **"Primary VNIC"**. Note the **Public IP address** (for example, `129.154.X.X`). You will use this in every subsequent step.
 
 ---
-
 ## Step 3: Configure Security Lists and Open Ports
 
 OCI Security Lists are firewall rules at the cloud network level. By default, only port 22 (SSH) is open. You need to add rules for HTTP (port 80) or HTTPS (port 443) before your web server is reachable from a browser.
@@ -243,7 +235,6 @@ Your security list should now contain at least these three ingress rules:
 <img width="1468" height="718" alt="Screenshot 2026-06-13 at 8 10 24 PM" src="https://github.com/user-attachments/assets/be47a6c2-6c20-4916-b542-6709a7681c5c" />
 
 ---
-
 ## Step 4: Connect via SSH
 
 ### 4.1 Set Correct Permissions on Your Private Key
@@ -274,7 +265,6 @@ The first time you connect, SSH will display a fingerprint verification prompt. 
 <img width="1151" height="263" alt="Screenshot 2026-06-13 at 8 13 26 PM" src="https://github.com/user-attachments/assets/738df1ce-4a42-4abe-939a-347777fde431" />
 
 ---
-
 ### 4.3 Update the System
 
 Always update packages before installing anything new:
@@ -329,7 +319,6 @@ cat /etc/os-release
 
 ---
 ---
-
 ## Step 5: Install Apache Web Server
 
 ### 5.1 Install Apache
@@ -372,13 +361,10 @@ Content-Type: text/html; charset=UTF-8
 ```
 
 ---
-
 >A `200 OK` here means Apache is working before you open it to the internet.
 
 >A 403 Forbidden error confirms Apache is running and responding, but it cannot serve the requested content. The cause can be incorrect file or directory permissions, a wrong SELinux security context, or a missing index file with directory listing disabled. Check the Apache error log first to identify which one applies before making any changes.
-
 ---
-
 ## Step 6: Configure the OS Firewall
 
 An OCI instance has two independent firewall layers. The first is the OCI Security List you configured in Step 3, which operates at the cloud network level. The second is `firewalld`, running inside the operating system. Both layers must allow a port for traffic to reach your web server.
@@ -403,7 +389,6 @@ sudo firewall-cmd --reload
 sudo firewall-cmd --list-all
 ```
 ---
-
 ## Step 7: Deploy Your HTML Website
 
 ### 7.1 About the Apache Document Root
@@ -787,9 +772,11 @@ Set the correct read permissions on the web directory:
 sudo find /var/www/html/ -type d -exec chmod 755 {} \;
 sudo find /var/www/html/ -type f -exec chmod 644 {} \;
 ```
-
-> **Note on ownership:** The `/var/www/html` directory is owned by `root` by default, and Apache runs as the `apache` user. For serving static HTML files, Apache only needs read access, which the 644/755 permissions above provide. Changing ownership to `apache` is only necessary if Apache needs to write to the directory (for example, for CMS uploads).
-
+---
+> **Note on ownership:**
+>
+> The `/var/www/html` directory is owned by `root` by default, and Apache runs as the `apache` user. For serving static HTML files, Apache only needs read access, which the 644/755 permissions above provide. Changing ownership to `apache` is only necessary if Apache needs to write to the directory (for example, for CMS uploads).
+---
 ```bash
 sudo chown -R apache:apache /var/www/html
 ```
@@ -837,7 +824,6 @@ sudo systemctl reload httpd
 This applies changes gracefully without dropping active connections.
 
 ---
-
 ## Step 8: Verify Website Access
 
 ### 8.1 Test Locally on the VM
@@ -850,7 +836,6 @@ curl -s http://localhost | grep -o "<title>.*</title>"
 <img width="1468" height="118" alt="Screenshot 2026-06-13 at 8 55 02 PM" src="https://github.com/user-attachments/assets/1d2edf1e-af07-4be8-83d3-2287a7ae3d09" />
 
 ---
-
 ### 8.2 Open the Website in a Browser
 
 On your local machine, open a browser and navigate to:
@@ -865,7 +850,6 @@ For example: `http://129.154.X.X`
 <img width="1470" height="926" alt="Screenshot 2026-06-13 at 9 11 30 PM" src="https://github.com/user-attachments/assets/1f13bd19-a59a-4099-989d-2f590eef0f11" />
 
 ---
-
 ### 8.3 Test from the Command Line on Your Local Machine
 
 ```bash
@@ -886,7 +870,6 @@ Content-Type: text/html; charset=UTF-8
 ```
 
 ---
-
 ## Troubleshooting
 
 ### Browser shows "Connection timed out" when accessing the website
@@ -962,7 +945,6 @@ sudo systemctl reload httpd
 ```
 
 ---
-
 ## Recommendations
 
 ### Security
